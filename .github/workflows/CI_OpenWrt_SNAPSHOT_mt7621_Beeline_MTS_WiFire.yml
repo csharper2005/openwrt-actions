@@ -34,6 +34,14 @@ jobs:
           cd openwrt/
           wget ${owrt_config}
           echo 'CONFIG_PACKAGE_luci-ssl=y' >> config.buildinfo
+          sed -i '/CONFIG_ALL_NONSHARED/d' config.buildinfo
+          sed -i '/CONFIG_BPF_TOOLCHAIN_BUILD_LLVM/d' config.buildinfo
+          sed -i '/CONFIG_SDK_LLVM_BPF/d' config.buildinfo
+          sed -i '/CONFIG_USE_LLVM_BUILD/d' config.buildinfo
+          sed -i '/CONFIG_REPRODUCIBLE_DEBUG_INFO/d' config.buildinfo
+          sed -i '/CONFIG_BPF_TOOLCHAIN_BUILD_LLVM/d' config.buildinfo
+          sed -i '/CONFIG_HAS_BPF_TOOLCHAIN/d' config.buildinfo
+          sed -i '/CONFIG_COLLECT_KERNEL_DEBUG/d' config.buildinfo
           cp config.buildinfo .config
           cat .config
           make defconfig
@@ -61,7 +69,7 @@ jobs:
           image_name=OpenWrt_${owrt_release}_mt7621_Beeline_MTS_WiFire_${{ env.current_date }}
           mkdir -p ${images_dir}/firmware/packages
           cd openwrt/
-          mv bin/targets/ramips/mt7621/packages ${images_dir}/firmware/packages
+          mv bin/targets/ramips/mt7621/packages ${images_dir}/firmware
           mv bin/targets/ramips/mt7621/*beeline* ${images_dir}/firmware
           mv bin/targets/ramips/mt7621/*mts* ${images_dir}/firmware
           mv bin/targets/ramips/mt7621/*wifire* ${images_dir}/firmware
