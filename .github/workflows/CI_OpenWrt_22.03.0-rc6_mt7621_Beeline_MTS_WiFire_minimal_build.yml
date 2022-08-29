@@ -33,6 +33,7 @@ jobs:
         run: |
           cd openwrt/
           wget ${owrt_config}
+          echo 'CONFIG_BPF_TOOLCHAIN_NONE=y' >> config.buildinfo
           echo CONFIG_KERNEL_VERMAGIC=\"${owrt_vermagic}\" >> config.buildinfo
           sed -i '/CONFIG_ALL_NONSHARED/d' config.buildinfo
           sed -i '/CONFIG_BPF_TOOLCHAIN_BUILD_LLVM/d' config.buildinfo
