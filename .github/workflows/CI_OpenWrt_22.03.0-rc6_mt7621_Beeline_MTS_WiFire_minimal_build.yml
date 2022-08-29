@@ -55,7 +55,7 @@ jobs:
           rm .config
           cp -r config.buildinfo .config
           make defconfig
-      - name: Download sources (packages)
+      - name: Download sources (all)
         run: |
           cd openwrt/
           make download -j$(nproc)
@@ -68,7 +68,7 @@ jobs:
           image_name=OpenWrt_${owrt_release}_mt7621_Beeline_MTS_WiFire_${{ env.current_date }}
           mkdir -p ${images_dir}/firmware/packages
           cd openwrt/
-          mv bin/targets/ramips/mt7621/packages ${images_dir}/firmware/packages
+          mv bin/targets/ramips/mt7621/packages ${images_dir}/firmware
           mv bin/targets/ramips/mt7621/*beeline* ${images_dir}/firmware
           mv bin/targets/ramips/mt7621/*mts* ${images_dir}/firmware
           mv bin/targets/ramips/mt7621/*wifire* ${images_dir}/firmware
