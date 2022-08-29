@@ -56,7 +56,7 @@ jobs:
           rm .config
           cp -r config.buildinfo .config
           make defconfig
-      - name: Download sources (packages)
+      - name: Download sources (all)
         run: |
           cd openwrt/
           make download -j$(nproc)
