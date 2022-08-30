@@ -43,6 +43,7 @@ jobs:
           sed -i '/CONFIG_BPF_TOOLCHAIN_BUILD_LLVM/d' config.buildinfo
           sed -i '/CONFIG_HAS_BPF_TOOLCHAIN/d' config.buildinfo
           sed -i '/CONFIG_COLLECT_KERNEL_DEBUG/d' config.buildinfo
+          sed -i '/CONFIG_SDK=y/d' config.buildinfo
           cp config.buildinfo .config
           cat .config
           make defconfig
@@ -77,7 +78,6 @@ jobs:
           mv bin/targets/ramips/mt7621/*buildinfo* ${images_dir}/firmware
           mv bin/targets/ramips/mt7621/*imagebuilder* ${images_dir}/firmware
           mv bin/targets/ramips/mt7621/*manifest* ${images_dir}/firmware
-          mv bin/targets/ramips/mt7621/*sdk* ${images_dir}/firmware
           mv bin/targets/ramips/mt7621/profiles* ${images_dir}/firmware
           mv bin/targets/ramips/mt7621/sha256* ${images_dir}/firmware
           7z a -mx=9 ${images_dir}/${image_name}.7z ${images_dir}/firmware
