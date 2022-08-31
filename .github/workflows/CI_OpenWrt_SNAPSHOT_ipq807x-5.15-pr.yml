@@ -32,18 +32,18 @@ jobs:
         run: |
           cd openwrt/
           echo "CONFIG_TARGET_ipq807x=y" >> config.buildinfo
-          echo "CONFIG_TARGET_ipq807x_generic=y\n" >> config.buildinfo
-          echo "CONFIG_TARGET_MULTI_PROFILE=y\n" >> config.buildinfo
-          echo "CONFIG_TARGET_ALL_PROFILES=y\n" >> config.buildinfo
-          echo "CONFIG_TARGET_PER_DEVICE_ROOTFS=y\n" >> config.buildinfo
-          echo "CONFIG_TARGET_ROOTFS_INITRAMFS=y\n" >> config.buildinfo
-          echo "CONFIG_TARGET_INITRAMFS_COMPRESSION_ZSTD=y\n" >> config.buildinfo
-          echo 'CONFIG_PACKAGE_luci-ssl=y' >> config.buildinfo
-          echo "CONFIG_PACKAGE_wpad-basic-wolfssl=m\n" >> config.buildinfo
-          echo "CONFIG_PACKAGE_wpad-wolfssl=y\n" >> config.buildinfo
-          echo "CONFIG_WOLFSSL_HAS_CPU_CRYPTO=y\n" >> config.buildinfo
-          echo "CONFIG_ALL_KMODS=y\n" >> config.buildinfo
-          echo "CONFIG_ALL_NONSHARED=y\n" >> config.buildinfo
+          echo "CONFIG_TARGET_ipq807x_generic=y" >> config.buildinfo
+          echo "CONFIG_TARGET_MULTI_PROFILE=y" >> config.buildinfo
+          echo "CONFIG_TARGET_ALL_PROFILES=y" >> config.buildinfo
+          echo "CONFIG_TARGET_PER_DEVICE_ROOTFS=y" >> config.buildinfo
+          echo "CONFIG_TARGET_ROOTFS_INITRAMFS=y" >> config.buildinfo
+          echo "CONFIG_TARGET_INITRAMFS_COMPRESSION_ZSTD=y" >> config.buildinfo
+          echo "CONFIG_PACKAGE_luci-ssl=y" >> config.buildinfo
+          echo "CONFIG_PACKAGE_wpad-basic-wolfssl=m" >> config.buildinfo
+          echo "CONFIG_PACKAGE_wpad-wolfssl=y" >> config.buildinfo
+          echo "CONFIG_WOLFSSL_HAS_CPU_CRYPTO=y" >> config.buildinfo
+          echo "CONFIG_ALL_KMODS=y" >> config.buildinfo
+          echo "CONFIG_ALL_NONSHARED=y" >> config.buildinfo
           make defconfig
           cp -r config.buildinfo .config
           cat .config
