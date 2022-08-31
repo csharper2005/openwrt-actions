@@ -26,6 +26,7 @@ jobs:
       - name: Prepare environment
         run: |
           sudo apt update
+          sudo apt install autoconf gcc-multilib
 
       - name: Set current datetime as env variable
         run: echo "current_date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
@@ -48,8 +49,9 @@ jobs:
           echo 'CONFIG_ALL_NONSHARED=y' >> config.buildinfo
           echo 'CONFIG_TARGET_PER_DEVICE_ROOTFS=y' >> config.buildinfo
           echo 'CONFIG_TARGET_ROOTFS_INITRAMFS=y' >> config.buildinfo
+          echo 'CONFIG_IB=y' >> config.buildinfo
           echo 'CONFIG_TARGET_INITRAMFS_COMPRESSION_ZSTD=y' >> config.buildinfo
-          echo 'CONFIG_PACKAGE_luci=y' >> config.buildinfo
+          echo 'CONFIG_PACKAGE_luci-ssl=y' >> config.buildinfo
           echo 'CONFIG_PACKAGE_wpad-basic-wolfssl=m' >> config.buildinfo
           echo 'CONFIG_PACKAGE_wpad-wolfssl=y' >> config.buildinfo
           echo 'CONFIG_WOLFSSL_HAS_CPU_CRYPTO=y' >> config.buildinfo
