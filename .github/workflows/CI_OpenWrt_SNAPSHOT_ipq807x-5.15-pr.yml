@@ -71,13 +71,11 @@ jobs:
       - name: Build tools
         run: |
           cd openwrt/
-          make tools/install -j$(nproc) V=s || \
-          make tools/install V=s
+          make tools/install -j$(nproc) V=s
       - name: Build toolchain
         run: |
           cd openwrt/
-          make toolchain/install -j$(nproc) V=s || \
-          make toolchain/install V=s
+          make toolchain/install -j$(nproc) V=s
       - name: Build OpenWrt and packages
         run: |
           cd openwrt/
