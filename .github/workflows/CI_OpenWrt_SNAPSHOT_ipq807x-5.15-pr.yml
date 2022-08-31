@@ -14,25 +14,30 @@ jobs:
   build:
     name: build
     runs-on: ubuntu-20.04
+
     env:
       images_dir: /opt/images
       owrt_branch: ipq807x-5.15-pr
       owrt_git: https://github.com/robimarko/openwrt.git
       owrt_release: SNAPSHOT
+
     steps:
       - uses: actions/checkout@v2
       - name: Prepare environment
         run: |
           sudo apt update
           sudo apt install gcc-multilib
+
       - name: Set current datetime as env variable
         run: echo "current_date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+
       - name: Download sources (OpenWrt)
         run: |
           echo ${{ env.current_date }}
           mkdir openwrt
           git clone --branch ${owrt_branch} ${owrt_git}
           cd openwrt/
+
       - name: Prepare build config for IPQ807x Generic
         run: |
           cd openwrt/
@@ -53,33 +58,40 @@ jobs:
           cp -r config.buildinfo .config
           cat .config
           make defconfig
+
       - name: Install feeds
         run: |
           cd openwrt/
           ./scripts/feeds update -a
           ./scripts/feeds install -a
+
       - name: Make defconfig
         run: |
           cd openwrt/
           rm .config
           cp -r config.buildinfo .config
           make defconfig
+
       - name: Download sources (all)
         run: |
           cd openwrt/
           make download -j$(nproc)
+
       - name: Build tools
         run: |
           cd openwrt/
           make tools/install -j$(nproc) V=s
+
       - name: Build toolchain
         run: |
           cd openwrt/
           make toolchain/install -j$(nproc) V=s
+
       - name: Build OpenWrt and packages
         run: |
           cd openwrt/
           make V=s -j$(nproc)
+
       - name: Create archive
         run: |
           image_name=OpenWrt_${owrt_release}_ipq807x-5.15-pr_${{ env.current_date }}
@@ -88,6 +100,7 @@ jobs:
           mv bin/targets ${images_dir}/firmware
           7z a -mx=9 ${images_dir}/${image_name}.7z ${images_dir}/firmware
           echo "image_name=${image_name}" >> $GITHUB_ENV
+
       - name: Upload images to Artifact
         if: ${{ github.event_name != 'release' && success() }}
         uses: actions/upload-artifact@v3
