@@ -55,7 +55,7 @@ jobs:
           echo 'CONFIG_PACKAGE_wpad-basic-wolfssl=m' >> config.buildinfo
           echo 'CONFIG_PACKAGE_wpad-wolfssl=y' >> config.buildinfo
           echo 'CONFIG_WOLFSSL_HAS_CPU_CRYPTO=y' >> config.buildinfo
-
+          
       - name: Install feeds
         run: |
           cd openwrt/
@@ -73,6 +73,7 @@ jobs:
         run: |
           cd openwrt/
           make download -j$(nproc)
+          echo '# INPUT_PM8941_PWRKEY is not set' >> target/linux/generic/config-5.15
 
       - name: Build tools
         run: |
