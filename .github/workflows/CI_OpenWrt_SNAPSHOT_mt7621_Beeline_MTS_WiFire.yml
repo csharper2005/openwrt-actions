@@ -1,3 +1,8 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# Copyright (c) 2022 Mikhail Zhilkin
+#
+
 name: CI_OpenWrt_SNAPSHOT_mt7621_Beeline_MTS_WiFire
 
 # Controls when the action will run. 
