@@ -40,7 +40,7 @@ jobs:
       - name: Prepare build config for IPQ807x Generic
         run: |
           cd openwrt/
-          echo "CONFIG_TARGET_ipq807x=y" > " > config.buildinfo
+          echo "CONFIG_TARGET_ipq807x=y" > config.buildinfo
           echo "CONFIG_TARGET_ipq807x_generic=y" >> config.buildinfo
           echo "CONFIG_TARGET_MULTI_PROFILE=y" >> config.buildinfo
           echo "CONFIG_TARGET_ALL_PROFILES=y" >> config.buildinfo
