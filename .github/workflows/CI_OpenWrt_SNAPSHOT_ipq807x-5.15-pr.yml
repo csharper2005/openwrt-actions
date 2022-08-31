@@ -37,6 +37,7 @@ jobs:
           mkdir openwrt
           git clone --branch ${owrt_branch} ${owrt_git}
           cd openwrt/
+          echo '# INPUT_PM8941_PWRKEY is not set' >> target/linux/generic/config-5.15
 
       - name: Prepare build config for IPQ807x Generic
         run: |
@@ -73,7 +74,6 @@ jobs:
         run: |
           cd openwrt/
           make download -j$(nproc)
-          echo '# INPUT_PM8941_PWRKEY is not set' >> target/linux/generic/config-5.15
 
       - name: Build tools
         run: |
