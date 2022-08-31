@@ -53,9 +53,6 @@ jobs:
           echo 'CONFIG_PACKAGE_wpad-basic-wolfssl=m' >> config.buildinfo
           echo 'CONFIG_PACKAGE_wpad-wolfssl=y' >> config.buildinfo
           echo 'CONFIG_WOLFSSL_HAS_CPU_CRYPTO=y' >> config.buildinfo
-          cp -r config.buildinfo .config
-          cat .config
-          make defconfig
 
       - name: Install feeds
         run: |
@@ -66,9 +63,9 @@ jobs:
       - name: Make defconfig
         run: |
           cd openwrt/
-          rm .config
           cp -r config.buildinfo .config
           make defconfig
+          cat .config
 
       - name: Download sources (all)
         run: |
