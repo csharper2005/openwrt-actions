@@ -1,0 +1,92 @@
+name: CI_OpenWrt_SNAPSHOT_ipq807x-5.15-pr
+
+# Controls when the action will run. 
+on:
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-20.04
+    env:
+      images_dir: /opt/images
+      owrt_branch: ipq807x-5.15-pr
+      owrt_git: https://github.com/robimarko/openwrt.git
+      owrt_release: SNAPSHOT
+    steps:
+      - uses: actions/checkout@v2
+      - name: Prepare environment
+        run: |
+          sudo apt update
+          sudo apt install gcc-multilib
+      - name: Set current datetime as env variable
+        run: echo "current_date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+      - name: Download sources (OpenWrt)
+        run: |
+          echo ${{ env.current_date }}
+          mkdir openwrt
+          git clone --branch ${owrt_branch} ${owrt_git}
+          cd openwrt/
+      - name: Prepare build config for IPQ807x Generic
+        run: |
+          cd openwrt/
+          echo "CONFIG_TARGET_ipq807x=y" >> config.buildinfo
+          echo "CONFIG_TARGET_ipq807x_generic=y\n" >> config.buildinfo
+          echo "CONFIG_TARGET_MULTI_PROFILE=y\n" >> config.buildinfo
+          echo "CONFIG_TARGET_ALL_PROFILES=y\n" >> config.buildinfo
+          echo "CONFIG_TARGET_PER_DEVICE_ROOTFS=y\n" >> config.buildinfo
+          echo "CONFIG_TARGET_ROOTFS_INITRAMFS=y\n" >> config.buildinfo
+          echo "CONFIG_TARGET_INITRAMFS_COMPRESSION_ZSTD=y\n" >> config.buildinfo
+          echo 'CONFIG_PACKAGE_luci-ssl=y' >> config.buildinfo
+          echo "CONFIG_PACKAGE_wpad-basic-wolfssl=m\n" >> config.buildinfo
+          echo "CONFIG_PACKAGE_wpad-wolfssl=y\n" >> config.buildinfo
+          echo "CONFIG_WOLFSSL_HAS_CPU_CRYPTO=y\n" >> config.buildinfo
+          echo "CONFIG_ALL_KMODS=y\n" >> config.buildinfo
+          echo "CONFIG_ALL_NONSHARED=y\n" >> config.buildinfo
+          make defconfig
+          cp -r config.buildinfo .config
+          cat .config
+          make defconfig
+      - name: Install feeds
+        run: |
+          cd openwrt/
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
+      - name: Make defconfig
+        run: |
+          cd openwrt/
+          rm .config
+          cp -r config.buildinfo .config
+          make defconfig
+      - name: Download sources (all)
+        run: |
+          cd openwrt/
+          make download -j$(nproc)
+      - name: Build tools
+        run: |
+          make tools/install -j$(nproc) V=s || \
+          make tools/install V=s
+      - name: Build toolchain
+        run: |
+          make toolchain/install -j$(nproc) V=s || \
+          make toolchain/install V=s
+      - name: Build OpenWrt and packages
+        run: |
+          cd openwrt/
+          make V=s -j$(nproc)
+      - name: Create archive
+        run: |
+          image_name=OpenWrt_${owrt_release}_ipq807x-5.15-pr_${{ env.current_date }}
+          mkdir -p ${images_dir}/firmware
+          cd openwrt/
+          mv bin/targets ${images_dir}/firmware
+          7z a -mx=9 ${images_dir}/${image_name}.7z ${images_dir}/firmware
+          echo "image_name=${image_name}" >> $GITHUB_ENV
+      - name: Upload images to Artifact
+        if: ${{ github.event_name != 'release' && success() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.image_name }}
+          path:
+            ${{ env.images_dir }}/${{ env.image_name }}.7z
