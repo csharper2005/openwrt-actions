@@ -1,11 +1,11 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
-# Copyright (c) 2022 Mikhail Zhilkin
+# Copyright (c) 2022-2023 Mikhail Zhilkin
 #
 
-name: CI_OpenWrt_SNAPSHOT_mt7621_Beeline_MTS_WiFire
+name: CI_OpenWrt_23.05_filogic_pending
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   workflow_dispatch:
 
@@ -16,10 +16,10 @@ jobs:
     runs-on: ubuntu-20.04
     env:
       images_dir: /opt/images
-      owrt_branch: sercomm
-      owrt_config: https://downloads.openwrt.org/snapshots/targets/ramips/mt7621/config.buildinfo
+      owrt_branch: pending-23.05
+      owrt_config: https://downloads.openwrt.org/releases/23.05.0-rc1/targets/mediatek/filogic/config.buildinfo
       owrt_git: https://github.com/csharper2005/openwrt.git
-      owrt_release: SNAPSHOT
+      owrt_release: 23.05.0-rc1
     steps:
       - uses: actions/checkout@v2
       - name: Prepare environment
@@ -34,12 +34,13 @@ jobs:
           mkdir openwrt
           git clone --branch ${owrt_branch} ${owrt_git}
           cd openwrt/
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
       - name: Prepare build config
         run: |
           cd openwrt/
           wget ${owrt_config}
           echo 'CONFIG_BPF_TOOLCHAIN_NONE=y' >> config.buildinfo
-          echo 'CONFIG_PACKAGE_luci-ssl=y' >> config.buildinfo
           sed -i '/CONFIG_ALL_NONSHARED/d' config.buildinfo
           sed -i '/CONFIG_BPF_TOOLCHAIN_BUILD_LLVM/d' config.buildinfo
           sed -i '/CONFIG_SDK_LLVM_BPF/d' config.buildinfo
@@ -66,25 +67,31 @@ jobs:
       - name: Download sources (all)
         run: |
           cd openwrt/
-          make download -j$(nproc)
+          make download -j20
+      - name: Build tools
+        run: |
+          cd openwrt/
+          make tools/install -j$(nproc) V=s
+      - name: Build toolchain
+        run: |
+          cd openwrt/
+          make toolchain/install -j$(nproc) V=s
       - name: Build OpenWrt and packages
         run: |
           cd openwrt/
           make V=s -j$(nproc)
       - name: Create archive
         run: |
-          image_name=OpenWrt_${owrt_release}_mt7621_Beeline_MTS_WiFire_${{ env.current_date }}
+          image_name=OpenWrt_${owrt_release}_filogic_pending_${{ env.current_date }}
           mkdir -p ${images_dir}/firmware/packages
           cd openwrt/
-          mv bin/targets/ramips/mt7621/packages ${images_dir}/firmware
-          mv bin/targets/ramips/mt7621/*beeline* ${images_dir}/firmware
-          mv bin/targets/ramips/mt7621/*mts* ${images_dir}/firmware
-          mv bin/targets/ramips/mt7621/*wifire* ${images_dir}/firmware
-          mv bin/targets/ramips/mt7621/*buildinfo* ${images_dir}/firmware
-          mv bin/targets/ramips/mt7621/*imagebuilder* ${images_dir}/firmware
-          mv bin/targets/ramips/mt7621/*manifest* ${images_dir}/firmware
-          mv bin/targets/ramips/mt7621/profiles* ${images_dir}/firmware
-          mv bin/targets/ramips/mt7621/sha256* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/packages ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/*mr90x* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/*buildinfo* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/*imagebuilder* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/*manifest* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/profiles* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/sha256* ${images_dir}/firmware
           7z a -mx=9 ${images_dir}/${image_name}.7z ${images_dir}/firmware
           echo "image_name=${image_name}" >> $GITHUB_ENV
       - name: Upload images to Artifact

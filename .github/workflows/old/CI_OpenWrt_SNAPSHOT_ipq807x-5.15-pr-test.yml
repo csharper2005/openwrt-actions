@@ -1,0 +1,98 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# Copyright (c) 2022 Mikhail Zhilkin
+#
+
+name: CI_OpenWrt_SNAPSHOT_ipq807x-5.15-pr-test
+
+# Controls when the action will run. 
+on:
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+
+    env:
+      images_dir: /opt/images
+      owrt_branch: ipq807x-5.15-pr
+      owrt_git: https://github.com/robimarko/openwrt.git
+      owrt_release: SNAPSHOT
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Prepare environment
+        run: |
+          sudo apt update
+          sudo apt install autoconf gcc-multilib
+      - name: Set current datetime as env variable
+        run: echo "current_date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+
+      - name: Download sources (OpenWrt)
+        run: |
+          echo ${{ env.current_date }}
+          mkdir openwrt
+          git clone --branch ${owrt_branch} ${owrt_git}
+          cd openwrt/
+          echo '# INPUT_PM8941_PWRKEY is not set' >> target/linux/ipq807x/config-5.15
+      - name: Prepare build config for IPQ807x Generic
+        run: |
+          cd openwrt/
+          echo 'CONFIG_TARGET_ipq807x=y' > config.buildinfo
+          echo 'CONFIG_TARGET_ipq807x_generic=y' >> config.buildinfo
+          echo 'CONFIG_TARGET_ipq807x_generic_DEVICE_xiaomi_ax3600=y' >> config.buildinfo
+          echo 'CONFIG_TARGET_INITRAMFS_COMPRESSION_ZSTD=y' >> config.buildinfo
+          echo 'CONFIG_ALL_KMODS=y' >> config.buildinfo
+          echo 'CONFIG_IB=y' >> config.buildinfo
+          echo 'CONFIG_PACKAGE_nss-firmware-ipq8074=y' >> config.buildinfo
+          echo 'CONFIG_PACKAGE_kmod-qca-nss-dp=y' >> config.buildinfo
+          echo 'CONFIG_PACKAGE_qca-ssdk-shell=y' >> config.buildinfo
+          echo 'CONFIG_PACKAGE_luci-ssl=y' >> config.buildinfo
+          echo 'CONFIG_PACKAGE_wpad-basic-wolfssl=m' >> config.buildinfo
+          echo 'CONFIG_PACKAGE_wpad-wolfssl=y' >> config.buildinfo
+          echo 'CONFIG_WOLFSSL_HAS_CPU_CRYPTO=y' >> config.buildinfo
+      - name: Install feeds
+        run: |
+          cd openwrt/
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
+      - name: Make defconfig
+        run: |
+          cd openwrt/
+          cp -r config.buildinfo .config
+          make defconfig
+          cat .config
+      - name: Download sources (all)
+        run: |
+          cd openwrt/
+          make download -j20
+      - name: Build tools
+        run: |
+          cd openwrt/
+          make tools/install -j$(nproc) V=s
+      - name: Build toolchain
+        run: |
+          cd openwrt/
+          make toolchain/install -j$(nproc) V=s
+      - name: Build OpenWrt and packages
+        run: |
+          cd openwrt/
+          make -j$(nproc) V=s || \
+          make V=s
+      - name: Create archive
+        run: |
+          image_name=OpenWrt_${owrt_release}_ipq807x-5.15-pr_${{ env.current_date }}
+          mkdir -p ${images_dir}/firmware
+          cd openwrt/
+          mv bin/targets ${images_dir}/firmware
+          7z a -mx=9 ${images_dir}/${image_name}.7z ${images_dir}/firmware
+          echo "image_name=${image_name}" >> $GITHUB_ENV
+      - name: Upload images to Artifact
+        if: ${{ github.event_name != 'release' && success() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.image_name }}
+          path:
+            ${{ env.images_dir }}/${{ env.image_name }}.7z

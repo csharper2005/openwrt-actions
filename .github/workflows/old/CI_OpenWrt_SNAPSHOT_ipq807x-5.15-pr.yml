@@ -37,7 +37,7 @@ jobs:
           mkdir openwrt
           git clone --branch ${owrt_branch} ${owrt_git}
           cd openwrt/
-          echo '# INPUT_PM8941_PWRKEY is not set' >> target/linux/generic/config-5.15
+          echo '# INPUT_PM8941_PWRKEY is not set' >> target/linux/ipq807x/config-5.15
 
       - name: Prepare build config for IPQ807x Generic
         run: |
@@ -46,12 +46,15 @@ jobs:
           echo 'CONFIG_TARGET_ipq807x_generic=y' >> config.buildinfo
           echo 'CONFIG_TARGET_MULTI_PROFILE=y' >> config.buildinfo
           echo 'CONFIG_TARGET_ALL_PROFILES=y' >> config.buildinfo
-          echo 'CONFIG_ALL_KMODS=y' >> config.buildinfo
-          echo 'CONFIG_ALL_NONSHARED=y' >> config.buildinfo
+          echo 'CONFIG_TARGET_INITRAMFS_COMPRESSION_ZSTD=y' >> config.buildinfo
           echo 'CONFIG_TARGET_PER_DEVICE_ROOTFS=y' >> config.buildinfo
           echo 'CONFIG_TARGET_ROOTFS_INITRAMFS=y' >> config.buildinfo
+          echo 'CONFIG_ALL_KMODS=y' >> config.buildinfo
+          echo 'CONFIG_ALL_NONSHARED=y' >> config.buildinfo
           echo 'CONFIG_IB=y' >> config.buildinfo
-          echo 'CONFIG_TARGET_INITRAMFS_COMPRESSION_ZSTD=y' >> config.buildinfo
+          echo 'CONFIG_PACKAGE_nss-firmware-ipq8074=y' >> config.buildinfo
+          echo 'CONFIG_PACKAGE_kmod-qca-nss-dp=y' >> config.buildinfo
+          echo 'CONFIG_PACKAGE_qca-ssdk-shell=y' >> config.buildinfo
           echo 'CONFIG_PACKAGE_luci-ssl=y' >> config.buildinfo
           echo 'CONFIG_PACKAGE_wpad-basic-wolfssl=m' >> config.buildinfo
           echo 'CONFIG_PACKAGE_wpad-wolfssl=y' >> config.buildinfo
@@ -73,7 +76,7 @@ jobs:
       - name: Download sources (all)
         run: |
           cd openwrt/
-          make download -j$(nproc)
+          make download -j20
 
       - name: Build tools
         run: |
