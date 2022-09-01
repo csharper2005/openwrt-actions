@@ -46,12 +46,12 @@ jobs:
           echo 'CONFIG_TARGET_ipq807x_generic=y' >> config.buildinfo
           echo 'CONFIG_TARGET_MULTI_PROFILE=y' >> config.buildinfo
           echo 'CONFIG_TARGET_ALL_PROFILES=y' >> config.buildinfo
-          echo 'CONFIG_ALL_KMODS=y' >> config.buildinfo
-          echo 'CONFIG_ALL_NONSHARED=y' >> config.buildinfo
+          echo 'CONFIG_TARGET_INITRAMFS_COMPRESSION_ZSTD=y' >> config.buildinfo
           echo 'CONFIG_TARGET_PER_DEVICE_ROOTFS=y' >> config.buildinfo
           echo 'CONFIG_TARGET_ROOTFS_INITRAMFS=y' >> config.buildinfo
-          echo 'CONFIG_IB=y' >> config.buildinfo
-          echo 'CONFIG_TARGET_INITRAMFS_COMPRESSION_ZSTD=y' >> config.buildinfo
+          echo 'CONFIG_PACKAGE_nss-firmware-ipq8074=y' >> config.buildinfo
+          echo 'CONFIG_PACKAGE_kmod-qca-nss-dp=y' >> config.buildinfo
+          echo 'CONFIG_PACKAGE_qca-ssdk-shell=y' >> config.buildinfo
           echo 'CONFIG_PACKAGE_luci-ssl=y' >> config.buildinfo
           echo 'CONFIG_PACKAGE_wpad-basic-wolfssl=m' >> config.buildinfo
           echo 'CONFIG_PACKAGE_wpad-wolfssl=y' >> config.buildinfo
