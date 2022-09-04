@@ -65,7 +65,7 @@ jobs:
       - name: Download sources (all)
         run: |
           cd openwrt/
-          make download -j$(nproc)
+          make download -j20
       - name: Build tools
         run: |
           cd openwrt/
