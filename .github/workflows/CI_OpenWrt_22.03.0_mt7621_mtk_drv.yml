@@ -3,7 +3,7 @@
 # Copyright (c) 2022 Mikhail Zhilkin
 #
 
-name: CI_OpenWrt_22.03.0_mt7621_Beeline_MTS_WiFire
+name: CI_OpenWrt_22.03.0_mt7621_mtk_drv
 
 # Controls when the action will run. 
 on:
