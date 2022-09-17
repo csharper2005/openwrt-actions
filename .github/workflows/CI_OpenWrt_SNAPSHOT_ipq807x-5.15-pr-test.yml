@@ -45,7 +45,6 @@ jobs:
           echo 'CONFIG_TARGET_ipq807x_generic_DEVICE_xiaomi_ax3600=y' >> config.buildinfo
           echo 'CONFIG_TARGET_INITRAMFS_COMPRESSION_ZSTD=y' >> config.buildinfo
           echo 'CONFIG_ALL_KMODS=y' >> config.buildinfo
-          echo 'CONFIG_ALL_NONSHARED=y' >> config.buildinfo
           echo 'CONFIG_IB=y' >> config.buildinfo
           echo 'CONFIG_PACKAGE_nss-firmware-ipq8074=y' >> config.buildinfo
           echo 'CONFIG_PACKAGE_kmod-qca-nss-dp=y' >> config.buildinfo
