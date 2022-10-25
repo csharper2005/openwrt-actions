@@ -68,6 +68,14 @@ jobs:
         run: |
           cd openwrt/
           make download -j20
+      - name: Build tools
+        run: |
+          cd openwrt/
+          make tools/install -j$(nproc) V=s
+      - name: Build toolchain
+        run: |
+          cd openwrt/
+          make toolchain/install -j$(nproc) V=s
       - name: Build OpenWrt and packages
         run: |
           cd openwrt/
