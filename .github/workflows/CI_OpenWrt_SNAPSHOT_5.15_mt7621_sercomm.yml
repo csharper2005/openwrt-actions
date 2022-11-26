@@ -3,7 +3,7 @@
 # Copyright (c) 2022 Mikhail Zhilkin
 #
 
-name: CI_OpenWrt_SNAPSHOT_5.15_mt7621_Beeline_MTS_Rostelecom_WiFire
+name: CI_OpenWrt_SNAPSHOT_5.15_mt7621_sercomm
 
 # Controls when the action will run. 
 on:
@@ -87,6 +87,7 @@ jobs:
           cd openwrt/
           mv bin/targets/ramips/mt7621/packages ${images_dir}/firmware
           mv bin/targets/ramips/mt7621/*beeline* ${images_dir}/firmware
+          mv bin/targets/ramips/mt7621/*etisalat* ${images_dir}/firmware
           mv bin/targets/ramips/mt7621/*mts* ${images_dir}/firmware
           mv bin/targets/ramips/mt7621/*rostelecom* ${images_dir}/firmware
           mv bin/targets/ramips/mt7621/*wifire* ${images_dir}/firmware
