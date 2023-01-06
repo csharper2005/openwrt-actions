@@ -87,6 +87,7 @@ jobs:
           cd openwrt/
           mv bin/targets/ramips/mt7621/packages ${images_dir}/firmware
           mv bin/targets/ramips/mt7621/*beeline* ${images_dir}/firmware
+          mv bin/targets/ramips/mt7621/*ec330-g5u-v1* ${images_dir}/firmware
           mv bin/targets/ramips/mt7621/*etisalat* ${images_dir}/firmware
           mv bin/targets/ramips/mt7621/*mts* ${images_dir}/firmware
           mv bin/targets/ramips/mt7621/*rostelecom* ${images_dir}/firmware
