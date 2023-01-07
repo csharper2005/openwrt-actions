@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
-# Copyright (c) 2022 Mikhail Zhilkin
+# Copyright (c) 2022-2023 Mikhail Zhilkin
 #
 
 name: CI_OpenWrt_SNAPSHOT_5.15_mt7621_sercomm
@@ -82,7 +82,7 @@ jobs:
           make V=s -j$(nproc)
       - name: Create archive
         run: |
-          image_name=OpenWrt_${owrt_release}_mt7621_Beeline_MTS_Rostelecom_WiFire_${{ env.current_date }}
+          image_name=OpenWrt_${owrt_release}_mt7621_unsupported_${{ env.current_date }}
           mkdir -p ${images_dir}/firmware/packages
           cd openwrt/
           mv bin/targets/ramips/mt7621/packages ${images_dir}/firmware
