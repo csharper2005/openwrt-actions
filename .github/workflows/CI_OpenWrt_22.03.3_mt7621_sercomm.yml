@@ -81,7 +81,7 @@ jobs:
           make V=s
       - name: Create archive
         run: |
-          image_name=OpenWrt_${owrt_release}_mt7621_Beeline_MTS_Rostelecom_WiFire_${{ env.current_date }}
+          image_name=OpenWrt_${owrt_release}_mt7621_unsupported_${{ env.current_date }}
           mkdir -p ${images_dir}/firmware/packages
           cd openwrt/
           mv bin/targets/ramips/mt7621/packages ${images_dir}/firmware
