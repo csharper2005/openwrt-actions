@@ -1,0 +1,107 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# Copyright (c) 2022-2023 Mikhail Zhilkin
+#
+
+name: CI_OpenWrt_filogic_pending_6.1
+
+# Controls when the action will run.
+on:
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-20.04
+    env:
+      images_dir: /opt/images
+      owrt_branch: mercusys_mr90x-v1
+      owrt_config: https://downloads.openwrt.org/snapshots/targets/mediatek/filogic/config.buildinfo
+      owrt_git: https://github.com/csharper2005/openwrt.git
+      owrt_release: SNAPSHOT_6.1
+    steps:
+      - uses: actions/checkout@v2
+      - name: Prepare environment
+        run: |
+          sudo apt update
+          sudo apt install gcc-multilib
+      - name: Set current datetime as env variable
+        run: echo "current_date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+      - name: Download sources (OpenWrt)
+        run: |
+          echo ${{ env.current_date }}
+          mkdir openwrt
+          git clone --branch ${owrt_branch} ${owrt_git}
+          cd openwrt/
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+          git rebase origin/main
+      - name: Prepare build config
+        run: |
+          cd openwrt/
+          wget ${owrt_config}
+          echo 'CONFIG_BPF_TOOLCHAIN_NONE=y' >> config.buildinfo
+          echo 'CONFIG_PACKAGE_luci=y' >> config.buildinfo
+          echo 'CONFIG_PACKAGE_luci-ssl=y' >> config.buildinfo
+          echo 'CONFIG_PACKAGE_luci-app-opkg=y' >> config.buildinfo
+          sed -i '/CONFIG_ALL_NONSHARED/d' config.buildinfo
+          sed -i '/CONFIG_BPF_TOOLCHAIN_BUILD_LLVM/d' config.buildinfo
+          sed -i '/CONFIG_SDK_LLVM_BPF/d' config.buildinfo
+          sed -i '/CONFIG_USE_LLVM_BUILD/d' config.buildinfo
+          sed -i '/CONFIG_REPRODUCIBLE_DEBUG_INFO/d' config.buildinfo
+          sed -i '/CONFIG_BPF_TOOLCHAIN_BUILD_LLVM/d' config.buildinfo
+          sed -i '/CONFIG_HAS_BPF_TOOLCHAIN/d' config.buildinfo
+          sed -i '/CONFIG_COLLECT_KERNEL_DEBUG/d' config.buildinfo
+          sed -i '/CONFIG_SDK=y/d' config.buildinfo
+          cp config.buildinfo .config
+          cat .config
+          make defconfig
+      - name: Install feeds
+        run: |
+          cd openwrt/
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
+      - name: Make defconfig
+        run: |
+          cd openwrt/
+          rm .config
+          cp -r config.buildinfo .config
+          make defconfig
+      - name: Download sources (all)
+        run: |
+          cd openwrt/
+          make download -j20
+      - name: Build tools
+        run: |
+          cd openwrt/
+          make tools/install -j$(nproc) V=s
+      - name: Build toolchain
+        run: |
+          cd openwrt/
+          make toolchain/install -j$(nproc) V=s
+      - name: Build OpenWrt and packages
+        run: |
+          cd openwrt/
+          make V=s -j$(nproc)
+      - name: Create archive
+        run: |
+          image_name=OpenWrt_${owrt_release}_filogic_pending_${{ env.current_date }}
+          mkdir -p ${images_dir}/firmware/packages
+          cd openwrt/
+          mv bin/targets/mediatek/filogic/packages ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/*mr90x* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/*buildinfo* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/*imagebuilder* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/*manifest* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/profiles* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/sha256* ${images_dir}/firmware
+          7z a -mx=9 ${images_dir}/${image_name}.7z ${images_dir}/firmware
+          echo "image_name=${image_name}" >> $GITHUB_ENV
+      - name: Upload images to Artifact
+        if: ${{ github.event_name != 'release' && success() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.image_name }}
+          path:
+            ${{ env.images_dir }}/${{ env.image_name }}.7z
