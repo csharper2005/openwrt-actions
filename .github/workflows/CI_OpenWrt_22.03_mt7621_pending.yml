@@ -49,6 +49,8 @@ jobs:
           sed -i '/CONFIG_HAS_BPF_TOOLCHAIN/d' config.buildinfo
           sed -i '/CONFIG_COLLECT_KERNEL_DEBUG/d' config.buildinfo
           sed -i '/CONFIG_SDK=y/d' config.buildinfo
+          sed -i '/CONFIG_PACKAGE_luci-ssl=y/d' config.buildinfo
+          echo 'CONFIG_PACKAGE_luci-ssl-openssl=y' >> config.buildinfo
           cp config.buildinfo .config
           cat .config
       - name: Install feeds
