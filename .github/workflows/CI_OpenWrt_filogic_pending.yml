@@ -13,10 +13,10 @@ on:
 jobs:
   build:
     name: build
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     env:
       images_dir: /opt/images
-      owrt_branch: mercusys_mr90x-v1
+      owrt_branch: routerich_ax3000
       owrt_config: https://downloads.openwrt.org/snapshots/targets/mediatek/filogic/config.buildinfo
       owrt_git: https://github.com/csharper2005/openwrt.git
       owrt_release: SNAPSHOT
@@ -90,7 +90,7 @@ jobs:
           mkdir -p ${images_dir}/firmware/packages
           cd openwrt/
           mv bin/targets/mediatek/filogic/packages ${images_dir}/firmware
-          mv bin/targets/mediatek/filogic/*mr90x* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/*routerich* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/*buildinfo* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/*imagebuilder* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/*manifest* ${images_dir}/firmware
