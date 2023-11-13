@@ -3,7 +3,7 @@
 # Copyright (c) 2022-2023 Mikhail Zhilkin
 #
 
-name: CI_OpenWrt_mt7621_pending
+name: CI_OpenWrt_mt7620_pending
 
 # Controls when the action will run.
 on:
