@@ -21,7 +21,7 @@ jobs:
       owrt_git: https://github.com/csharper2005/openwrt.git
       owrt_release: SNAPSHOT
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Prepare environment
         run: |
           sudo apt update
