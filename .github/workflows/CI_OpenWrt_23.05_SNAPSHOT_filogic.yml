@@ -87,6 +87,7 @@ jobs:
           cd openwrt/
           mv bin/targets/mediatek/filogic/packages ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/*routerich* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/*ax59u* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/*buildinfo* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/*imagebuilder* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/*manifest* ${images_dir}/firmware
