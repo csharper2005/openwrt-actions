@@ -34,9 +34,6 @@ jobs:
           mkdir openwrt
           git clone --branch ${owrt_branch} ${owrt_git}
           cd openwrt/
-          git config --global user.email "you@example.com"
-          git config --global user.name "Your Name"
-          git rebase origin/main
       - name: Prepare build config
         run: |
           cd openwrt/
