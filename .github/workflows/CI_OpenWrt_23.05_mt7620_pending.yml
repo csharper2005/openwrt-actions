@@ -16,10 +16,10 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       images_dir: /opt/images
-      owrt_branch: 23.05_rostelecom_rt-fl-1
-      owrt_config: https://downloads.openwrt.org/releases/23.05-SNAPSHOT/targets/ramips/mt7620/config.buildinfo
+      owrt_branch: pending-23.05
+      owrt_config: https://downloads.openwrt.org/releases/23.05.2/targets/ramips/mt7620/config.buildinfo
       owrt_git: https://github.com/csharper2005/openwrt.git
-      owrt_release: 23.05-SNAPSHOT
+      owrt_release: 23.05.2
     steps:
       - uses: actions/checkout@v4
       - name: Prepare environment
