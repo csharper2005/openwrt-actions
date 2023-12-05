@@ -83,6 +83,7 @@ jobs:
           make V=s
       - name: Create archive
         run: |
+          cd openwrt/
           image_name=OpenWrt_${owrt_release}_mt7621_pending_${{ env.current_date }}
           7z a -mx=9 ${images_dir}/${image_name}.7z bin/targets/ramips/mt7621
           echo "image_name=${image_name}" >> $GITHUB_ENV
