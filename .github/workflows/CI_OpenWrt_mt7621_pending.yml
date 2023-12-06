@@ -13,13 +13,13 @@ on:
 jobs:
   build:
     name: build
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     env:
       images_dir: /opt/images
-      owrt_branch: pending
-      owrt_config: https://downloads.openwrt.org/snapshots/targets/ramips/mt7621/config.buildinfo
+      owrt_branch: 23.05-rostelecom_rt-fe-1a
+      owrt_config: https://downloads.openwrt.org/releases/23.05-SNAPSHOT/targets/ramips/mt7621/config.buildinfo
       owrt_git: https://github.com/csharper2005/openwrt.git
-      owrt_release: SNAPSHOT
+      owrt_release: 23.05-SNAPSHOT
     steps:
       - uses: actions/checkout@v2
       - name: Prepare environment
@@ -90,9 +90,7 @@ jobs:
           mkdir -p ${images_dir}/firmware/packages
           cd openwrt/
           mv bin/targets/ramips/mt7621/packages ${images_dir}/firmware
-          mv bin/targets/ramips/mt7621/*smartbox-turbo-plus* ${images_dir}/firmware
-          mv bin/targets/ramips/mt7621/*smartbox-pro* ${images_dir}/firmware
-          mv bin/targets/ramips/mt7621/*wifire* ${images_dir}/firmware
+          mv bin/targets/ramips/mt7621/*rt-fe-1a* ${images_dir}/firmware
           mv bin/targets/ramips/mt7621/*buildinfo* ${images_dir}/firmware
           mv bin/targets/ramips/mt7621/*imagebuilder* ${images_dir}/firmware
           mv bin/targets/ramips/mt7621/*manifest* ${images_dir}/firmware
