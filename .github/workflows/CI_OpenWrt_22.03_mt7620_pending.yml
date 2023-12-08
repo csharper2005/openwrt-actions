@@ -49,7 +49,6 @@ jobs:
           sed -i '/CONFIG_HAS_BPF_TOOLCHAIN/d' config.buildinfo
           sed -i '/CONFIG_COLLECT_KERNEL_DEBUG/d' config.buildinfo
           sed -i '/CONFIG_SDK=y/d' config.buildinfo
-          sed -i '/CONFIG_PACKAGE_luci=y/d' config.buildinfo
           cp config.buildinfo .config
           cat .config
       - name: Install feeds
