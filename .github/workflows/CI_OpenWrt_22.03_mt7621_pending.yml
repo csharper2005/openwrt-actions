@@ -83,9 +83,21 @@ jobs:
           make V=s
       - name: Create archive
         run: |
-          cd openwrt/
           image_name=OpenWrt_${owrt_release}_mt7621_pending_${{ env.current_date }}
-          7z a -mx=9 ${images_dir}/${image_name}.7z bin/targets/ramips/mt7621
+          mkdir -p ${images_dir}/firmware/packages
+          cd openwrt/
+          mv bin/targets/ramips/mt7621/packages ${images_dir}/firmware
+          mv bin/targets/ramips/mt7621/*beeline* ${images_dir}/firmware
+          mv bin/targets/ramips/mt7621/*etisalat* ${images_dir}/firmware
+          mv bin/targets/ramips/mt7621/*ec330-g5u-v1* ${images_dir}/firmware
+          mv bin/targets/ramips/mt7621/*rostelecom* ${images_dir}/firmware
+          mv bin/targets/ramips/mt7621/*wifire* ${images_dir}/firmware
+          mv bin/targets/ramips/mt7621/*buildinfo* ${images_dir}/firmware
+          mv bin/targets/ramips/mt7621/*imagebuilder* ${images_dir}/firmware
+          mv bin/targets/ramips/mt7621/*manifest* ${images_dir}/firmware
+          mv bin/targets/ramips/mt7621/profiles* ${images_dir}/firmware
+          mv bin/targets/ramips/mt7621/sha256* ${images_dir}/firmware
+          7z a -mx=9 ${images_dir}/${image_name}.7z ${images_dir}/firmware
           echo "image_name=${image_name}" >> $GITHUB_ENV
       - name: Upload images to Artifact
         if: ${{ github.event_name != 'release' && success() }}
@@ -93,4 +105,6 @@ jobs:
         with:
           name: ${{ env.image_name }}
           path:
+            ${{ env.images_dir }}/${{ env.image_name }}.7z
+
             ${{ env.images_dir }}/${{ env.image_name }}.7z
