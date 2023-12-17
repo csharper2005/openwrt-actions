@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       images_dir: /opt/images
-      owrt_branch: routerich_ax3000_pr
+      owrt_branch: pending-main
       owrt_config: https://downloads.openwrt.org/snapshots/targets/mediatek/filogic/config.buildinfo
       owrt_git: https://github.com/csharper2005/openwrt.git
       owrt_release: SNAPSHOT
@@ -43,8 +43,6 @@ jobs:
           wget ${owrt_config}
           echo 'CONFIG_BPF_TOOLCHAIN_NONE=y' >> config.buildinfo
           echo 'CONFIG_PACKAGE_luci=y' >> config.buildinfo
-          echo 'CONFIG_PACKAGE_luci-ssl=y' >> config.buildinfo
-          echo 'CONFIG_PACKAGE_luci-app-opkg=y' >> config.buildinfo
           sed -i '/CONFIG_ALL_NONSHARED/d' config.buildinfo
           sed -i '/CONFIG_BPF_TOOLCHAIN_BUILD_LLVM/d' config.buildinfo
           sed -i '/CONFIG_SDK_LLVM_BPF/d' config.buildinfo
@@ -91,7 +89,7 @@ jobs:
           cd openwrt/
           mv bin/targets/mediatek/filogic/packages ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/*routerich* ${images_dir}/firmware
-          mv bin/targets/mediatek/filogic/*mercusys* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/*ax59u* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/*buildinfo* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/*imagebuilder* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/*manifest* ${images_dir}/firmware
