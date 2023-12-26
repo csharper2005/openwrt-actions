@@ -3,7 +3,7 @@
 # Copyright (c) 2022-2023 Mikhail Zhilkin
 #
 
-name: CI_OpenWrt_mt7621_test
+name: CI_OpenWrt_23.05_SNAPSHOT_filogic
 
 # Controls when the action will run.
 on:
@@ -13,13 +13,13 @@ on:
 jobs:
   build:
     name: build
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     env:
       images_dir: /opt/images
-      owrt_branch: mac-address-ascii
-      owrt_config: https://downloads.openwrt.org/snapshots/targets/ramips/mt7621/config.buildinfo
+      owrt_branch: 23.05-routerich_ax3000
+      owrt_config: https://downloads.openwrt.org/releases/23.05-SNAPSHOT/targets/mediatek/filogic/config.buildinfo
       owrt_git: https://github.com/csharper2005/openwrt.git
-      owrt_release: TEST
+      owrt_release: 23.05-SNAPSHOT
     steps:
       - uses: actions/checkout@v2
       - name: Prepare environment
@@ -36,15 +36,12 @@ jobs:
           cd openwrt/
           git config --global user.email "you@example.com"
           git config --global user.name "Your Name"
-          git rebase origin/main
       - name: Prepare build config
         run: |
           cd openwrt/
           wget ${owrt_config}
           echo 'CONFIG_BPF_TOOLCHAIN_NONE=y' >> config.buildinfo
           echo 'CONFIG_PACKAGE_luci=y' >> config.buildinfo
-          echo 'CONFIG_PACKAGE_luci-ssl=y' >> config.buildinfo
-          echo 'CONFIG_PACKAGE_luci-app-opkg=y' >> config.buildinfo
           sed -i '/CONFIG_ALL_NONSHARED/d' config.buildinfo
           sed -i '/CONFIG_BPF_TOOLCHAIN_BUILD_LLVM/d' config.buildinfo
           sed -i '/CONFIG_SDK_LLVM_BPF/d' config.buildinfo
@@ -86,16 +83,16 @@ jobs:
           make V=s -j$(nproc)
       - name: Create archive
         run: |
-          image_name=OpenWrt_${owrt_release}_mt7621_test_${{ env.current_date }}
+          image_name=OpenWrt_${owrt_release}_filogic_pending_${{ env.current_date }}
           mkdir -p ${images_dir}/firmware/packages
           cd openwrt/
-          mv bin/targets/ramips/mt7621/packages ${images_dir}/firmware
-          mv bin/targets/ramips/mt7621/*ec330* ${images_dir}/firmware
-          mv bin/targets/ramips/mt7621/*buildinfo* ${images_dir}/firmware
-          mv bin/targets/ramips/mt7621/*imagebuilder* ${images_dir}/firmware
-          mv bin/targets/ramips/mt7621/*manifest* ${images_dir}/firmware
-          mv bin/targets/ramips/mt7621/profiles* ${images_dir}/firmware
-          mv bin/targets/ramips/mt7621/sha256* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/packages ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/*routerich* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/*buildinfo* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/*imagebuilder* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/*manifest* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/profiles* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/sha256* ${images_dir}/firmware
           7z a -mx=9 ${images_dir}/${image_name}.7z ${images_dir}/firmware
           echo "image_name=${image_name}" >> $GITHUB_ENV
       - name: Upload images to Artifact
