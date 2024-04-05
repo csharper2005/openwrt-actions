@@ -41,6 +41,7 @@ jobs:
           echo 'CONFIG_BPF_TOOLCHAIN_NONE=y' >> config.buildinfo
           echo 'CONFIG_PACKAGE_luci=y' >> config.buildinfo
           echo 'CONFIG_PACKAGE_luci=y' >> config.buildinfo
+          echo 'CONFIG_TESTING_KERNEL=y' >> config.buildinfo
           sed -i '/CONFIG_ALL_NONSHARED/d' config.buildinfo
           sed -i '/CONFIG_BPF_TOOLCHAIN_BUILD_LLVM/d' config.buildinfo
           sed -i '/CONFIG_SDK_LLVM_BPF/d' config.buildinfo
