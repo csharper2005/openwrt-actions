@@ -93,7 +93,7 @@ jobs:
           mv bin/targets/mediatek/filogic/packages ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/*ax3000t* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/*buildinfo* ${images_dir}/firmware
-          mv bin/targets/mediatek/filogic1/*imagebuilder* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/*imagebuilder* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/*manifest* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/profiles* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/sha256* ${images_dir}/firmware
