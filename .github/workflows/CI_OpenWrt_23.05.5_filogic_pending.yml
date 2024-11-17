@@ -20,7 +20,7 @@ jobs:
       owrt_config: https://downloads.openwrt.org/releases/23.05.5/targets/mediatek/filogic/config.buildinfo
       owrt_git: https://github.com/csharper2005/openwrt.git
       owrt_release: 23.05.5
-      owrt_vermagic: b633bd997bdfdd50212c4c291cfee14e
+      owrt_vermagic: 03ba5b5fee47f2232a088e3cd9832aec
     steps:
       - uses: actions/checkout@v2
       - name: Prepare environment
