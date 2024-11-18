@@ -87,11 +87,16 @@ jobs:
           make V=s -j$(nproc)
       - name: Create archive
         run: |
-          image_name=OpenWrt_${owrt_release}_mt7621_pending_${{ env.current_date }}
+          image_name=OpenWrt_${owrt_release}_filogic_pending_${{ env.current_date }}
           mkdir -p ${images_dir}/firmware/packages
           cd openwrt/
           mv bin/targets/mediatek/filogic/packages ${images_dir}/firmware
-          mv bin/targets/mediatek/filogic/*ax3000t* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/*asus_rt-ax59u* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/*mercusys_mr90x-v1-u* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/*routerich_ax3000-u* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/*xiaomi_mi-router-ax3000t-i* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/*xiaomi_mi-router-ax3000t-s* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/*xiaomi_redmi-router-ax6000-u* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/*buildinfo* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/*imagebuilder* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/*manifest* ${images_dir}/firmware
