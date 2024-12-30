@@ -43,7 +43,7 @@ jobs:
           wget ${owrt_config}
           echo 'CONFIG_BPF_TOOLCHAIN_NONE=y' >> config.buildinfo
           echo CONFIG_KERNEL_VERMAGIC=\"${owrt_vermagic}\" >> config.buildinfo
-          sed -i 'CONFIG_TARGET_MULTI_PROFILE=y/d' config.buildinfo
+          sed -i '/CONFIG_TARGET_MULTI_PROFILE=y/d' config.buildinfo
           sed -i '/CONFIG_ALL_NONSHARED/d' config.buildinfo
           sed -i '/CONFIG_BPF_TOOLCHAIN_BUILD_LLVM/d' config.buildinfo
           sed -i '/CONFIG_SDK_LLVM_BPF/d' config.buildinfo
@@ -52,7 +52,6 @@ jobs:
           sed -i '/CONFIG_BPF_TOOLCHAIN_BUILD_LLVM/d' config.buildinfo
           sed -i '/CONFIG_HAS_BPF_TOOLCHAIN/d' config.buildinfo
           sed -i '/CONFIG_COLLECT_KERNEL_DEBUG/d' config.buildinfo
-          sed -i '/CONFIG_SDK=y/d' config.buildinfo
           sed -i '/CONFIG_COLLECT_KERNEL_DEBUG=y/d' config.buildinfo
           sed -i '/CONFIG_MAKE_TOOLCHAIN=y/d' config.buildinfo
           sed -i '/CONFIG_REPRODUCIBLE_DEBUG_INFO=y/d' config.buildinfo
