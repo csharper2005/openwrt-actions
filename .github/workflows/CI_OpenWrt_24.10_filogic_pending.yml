@@ -40,13 +40,25 @@ jobs:
       owrt_release: 24.10.0-rc6
       owrt_vermagic: e62284b446fe7638f263008edcf81109
     steps:
+      - name: Maximize build space
+      - uses: easimon/maximize-build-space@master
+        with:
+          root-reserve-mb: 4096
+          swap-size-mb: 1024
+          remove-dotnet: 'true'
+          remove-android: 'true'
+          remove-haskell: 'true'
+          build-mount-path: '/workdir'
+
       - uses: actions/checkout@v2
       - name: Prepare environment
         run: |
           sudo apt update
           sudo apt install gcc-multilib
+
       - name: Set current datetime as env variable
         run: echo "current_date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+
       - name: Download sources (OpenWrt)
         run: |
           echo ${{ env.current_date }}
@@ -55,12 +67,11 @@ jobs:
           cd openwrt/
           git config --global user.email "you@example.com"
           git config --global user.name "Your Name"
+
       - name: Prepare build config
         run: |
           cd openwrt/
           wget ${owrt_config}
-
-
           sed -i '/CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE/d' config.buildinfo
           sed -i '/CONFIG_TARGET_DEVICE_PACKAGES_mediatek_filogic_DEVICE/d' config.buildinfo
           sed -i '/CONFIG_ALL_NONSHARED=y/d' config.buildinfo
@@ -81,33 +92,51 @@ jobs:
           cp config.buildinfo .config
           cat .config
           make defconfig
+
       - name: Install feeds
         run: |
           cd openwrt/
           ./scripts/feeds update -a
           ./scripts/feeds install -a
+
       - name: Make defconfig
         run: |
           cd openwrt/
           rm .config
           cp -r config.buildinfo .config
           make defconfig
+          la $GITHUB_WORKSPACE
+
       - name: Download sources (all)
         run: |
           cd openwrt/
           make download -j20
+
       - name: Build tools
         run: |
           cd openwrt/
           make tools/install -j$(nproc) V=s
+
       - name: Build toolchain
         run: |
           cd openwrt/
           make toolchain/install -j$(nproc) V=s
+
       - name: Build OpenWrt and packages
         run: |
           cd openwrt/
           make V=s -j$(nproc)
+
+      - name: Remove unuselesss files to free up space
+        id: removeunuselessfiles
+        run: |
+          df -hT
+          rm -rf  $GITHUB_WORKSPACE/openwrt/build_dir
+          rm -rf  $GITHUB_WORKSPACE/openwrt/dl
+          rm -rf  $GITHUB_WORKSPACE/openwrt/staging_dir
+          rm -rf  $GITHUB_WORKSPACE/openwrt/toolchain
+          rm -rf  $GITHUB_WORKSPACE/openwrt/tools
+
       - name: Create archive
         run: |
           image_name=OpenWrt_${owrt_release}_filogic_pending_${{ env.current_date }}
@@ -122,6 +151,7 @@ jobs:
           mv bin/targets/mediatek/filogic/sha256* ${images_dir}/firmware
           7z a -mx=9 ${images_dir}/${image_name}.7z ${images_dir}/firmware
           echo "image_name=${image_name}" >> $GITHUB_ENV
+
       - name: Upload images to Artifact
         if: ${{ github.event_name != 'release' && success() }}
         uses: actions/upload-artifact@v3
