@@ -98,16 +98,6 @@ jobs:
           cd openwrt/
           make V=s -j$(nproc)
 
-      - name: Remove unuselesss files to free up space
-        id: removeunuselessfiles
-        run: |
-          df -hT
-          rm -rf  $GITHUB_WORKSPACE/openwrt/build_dir
-          rm -rf  $GITHUB_WORKSPACE/openwrt/dl
-          rm -rf  $GITHUB_WORKSPACE/openwrt/staging_dir
-          rm -rf  $GITHUB_WORKSPACE/openwrt/toolchain
-          rm -rf  $GITHUB_WORKSPACE/openwrt/tools
-
       - name: Create archive
         run: |
           image_name=OpenWrt_${owrt_release}_filogic_pending_${{ env.current_date }}
