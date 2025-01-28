@@ -19,19 +19,9 @@ jobs:
       owrt_branch: pending-24.10
       owrt_config: https://downloads.openwrt.org/releases/24.10.0-rc5/targets/mediatek/filogic/config.buildinfo
       owrt_git: https://github.com/csharper2005/openwrt.git
-      owrt_release: 24.10.0-rc6
-      owrt_vermagic: e62284b446fe7638f263008edcf81109
+      owrt_release: 24.10.0-rc7
+      owrt_vermagic: d649d775435da5a8637f7a955a80d331
     steps:
-      - name: Maximize build space
-      - uses: easimon/maximize-build-space@master
-        with:
-          root-reserve-mb: 4096
-          swap-size-mb: 1024
-          remove-dotnet: 'true'
-          remove-android: 'true'
-          remove-haskell: 'true'
-          build-mount-path: '/workdir'
-
       - uses: actions/checkout@v2
       - name: Prepare environment
         run: |
@@ -54,8 +44,6 @@ jobs:
         run: |
           cd openwrt/
           wget ${owrt_config}
-          sed -i '/CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE/d' config.buildinfo
-          sed -i '/CONFIG_TARGET_DEVICE_PACKAGES_mediatek_filogic_DEVICE/d' config.buildinfo
           sed -i '/CONFIG_ALL_NONSHARED=y/d' config.buildinfo
           sed -i '/CONFIG_BPF_TOOLCHAIN_BUILD_LLVM=y/d' config.buildinfo
           echo 'CONFIG_BPF_TOOLCHAIN_NONE=y' >> config.buildinfo
@@ -67,10 +55,6 @@ jobs:
           sed -i '/CONFIG_USE_LLVM_BUILD=y/d' config.buildinfo
           sed -i '/CONFIG_REPRODUCIBLE_DEBUG_INFO=y/d' config.buildinfo
           echo CONFIG_KERNEL_VERMAGIC=\"${owrt_vermagic}\" >> config.buildinfo
-          echo CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_xiaomi_mi-router-ax3000t=y >> config.buildinfo
-          echo CONFIG_TARGET_DEVICE_PACKAGES_mediatek_filogic_DEVICE_xiaomi_mi-router-ax3000t=\"\" >> config.buildinfo
-          echo CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_xiaomi_mi-router-ax3000t-ubootmod=y >> config.buildinfo
-          echo CONFIG_TARGET_DEVICE_PACKAGES_mediatek_filogic_DEVICE_xiaomi_mi-router-ax3000t-ubootmod=\"\" >> config.buildinfo
           cp config.buildinfo .config
           cat .config
           make defconfig
@@ -87,7 +71,12 @@ jobs:
           rm .config
           cp -r config.buildinfo .config
           make defconfig
-          la $GITHUB_WORKSPACE
+          sed -i '/CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE/d' config.buildinfo
+          sed -i '/CONFIG_TARGET_DEVICE_PACKAGES_mediatek_filogic_DEVICE/d' config.buildinfo
+          echo CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_xiaomi_mi-router-ax3000t=y >> config.buildinfo
+          echo CONFIG_TARGET_DEVICE_PACKAGES_mediatek_filogic_DEVICE_xiaomi_mi-router-ax3000t=\"\" >> config.buildinfo
+          echo CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_xiaomi_mi-router-ax3000t-ubootmod=y >> config.buildinfo
+          echo CONFIG_TARGET_DEVICE_PACKAGES_mediatek_filogic_DEVICE_xiaomi_mi-router-ax3000t-ubootmod=\"\" >> config.buildinfo
 
       - name: Download sources (all)
         run: |
