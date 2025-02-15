@@ -40,6 +40,12 @@ jobs:
           git config --global user.email "you@example.com"
           git config --global user.name "Your Name"
 
+      - name: Install feeds
+        run: |
+          cd openwrt/
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
+
       - name: Prepare build config
         run: |
           cd openwrt/
@@ -58,21 +64,8 @@ jobs:
           sed -i '/CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE/d' config.buildinfo
           sed -i '/CONFIG_TARGET_DEVICE_PACKAGES_mediatek_filogic_DEVICE/d' config.buildinfo
           cp config.buildinfo .config
+          make defconfig
           cat .config
-          make defconfig
-
-      - name: Install feeds
-        run: |
-          cd openwrt/
-          ./scripts/feeds update -a
-          ./scripts/feeds install -a
-
-      - name: Make defconfig
-        run: |
-          cd openwrt/
-          rm .config
-          cp -r config.buildinfo .config
-          make defconfig
 
       - name: Download sources (all)
         run: |
