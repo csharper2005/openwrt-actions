@@ -61,8 +61,6 @@ jobs:
           sed -i '/CONFIG_USE_LLVM_BUILD=y/d' config.buildinfo
           sed -i '/CONFIG_REPRODUCIBLE_DEBUG_INFO=y/d' config.buildinfo
           echo CONFIG_KERNEL_VERMAGIC=\"${owrt_vermagic}\" >> config.buildinfo
-          sed -i '/CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE/d' config.buildinfo
-          sed -i '/CONFIG_TARGET_DEVICE_PACKAGES_mediatek_filogic_DEVICE/d' config.buildinfo
           cp config.buildinfo .config
           make defconfig
           cat .config
@@ -93,13 +91,10 @@ jobs:
           mkdir -p ${images_dir}/firmware/packages
           cd openwrt/
           mv bin/targets/mediatek/filogic/packages ${images_dir}/firmware
-          mv bin/targets/mediatek/filogic/*asus* ${images_dir}/firmware
-          mv bin/targets/mediatek/filogic/*mercusys* ${images_dir}/firmware
-          mv bin/targets/mediatek/filogic/*routerich* ${images_dir}/firmware
-          mv bin/targets/mediatek/filogic/*xiaomi* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/*buildinfo* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/*imagebuilder* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/*manifest* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/*xiaomi* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/profiles* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/sha256* ${images_dir}/firmware
           7z a -mx=9 ${images_dir}/${image_name}.7z ${images_dir}/firmware
