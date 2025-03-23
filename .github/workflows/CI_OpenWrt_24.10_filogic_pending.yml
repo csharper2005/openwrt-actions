@@ -60,6 +60,8 @@ jobs:
           sed -i '/CONFIG_TARGET_ALL_PROFILES=y/d' config.buildinfo
           sed -i '/CONFIG_USE_LLVM_BUILD=y/d' config.buildinfo
           sed -i '/CONFIG_REPRODUCIBLE_DEBUG_INFO=y/d' config.buildinfo
+          sed -i '/CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE/d' config.buildinfo
+          sed -i '/CONFIG_TARGET_DEVICE_PACKAGES_mediatek_filogic_DEVICE/d' config.buildinfo
           echo CONFIG_KERNEL_VERMAGIC=\"${owrt_vermagic}\" >> config.buildinfo
           cp config.buildinfo .config
           make defconfig
