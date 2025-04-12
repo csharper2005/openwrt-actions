@@ -3,7 +3,7 @@
 # Copyright (c) 2022-2023 Mikhail Zhilkin
 #
 
-name: CI_OpenWrt_23.05.5_filogic
+name: CI_OpenWrt_23.05.5_routerich
 
 # Controls when the action will run.
 on:
