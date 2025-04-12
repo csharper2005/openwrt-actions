@@ -96,8 +96,9 @@ jobs:
           mv bin/targets/mediatek/filogic/*buildinfo* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/*imagebuilder* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/*manifest* ${images_dir}/firmware
-          mv bin/targets/mediatek/filogic/*netis* ${images_dir}/firmware
-          mv bin/targets/mediatek/filogic/*xiaomi* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/*netis_nx31* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/*routerich_ax3000-v1* ${images_dir}/firmware
+          mv bin/targets/mediatek/filogic/*xiaomi_mi-router-ax3000t* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/profiles* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/sha256* ${images_dir}/firmware
           7z a -mx=9 ${images_dir}/${image_name}.7z ${images_dir}/firmware
