@@ -17,10 +17,10 @@ jobs:
     env:
       images_dir: /opt/images
       owrt_branch: pending-24.10
-      owrt_config: https://downloads.openwrt.org/releases/24.10.1/targets/mediatek/filogic/config.buildinfo
+      owrt_config: https://downloads.openwrt.org/releases/24.10.2/targets/mediatek/filogic/config.buildinfo
       owrt_git: https://github.com/csharper2005/openwrt.git
-      owrt_release: 24.10.1
-      owrt_vermagic: 6ace983a14b769f576fe9c4c7961bd89
+      owrt_release: 24.10.2
+      owrt_vermagic: 6a9e125268c43e0bae8cecb014c8ab03
     steps:
       - uses: actions/checkout@v2
       - name: Prepare environment
@@ -96,7 +96,6 @@ jobs:
           mv bin/targets/mediatek/filogic/*buildinfo* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/*imagebuilder* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/*manifest* ${images_dir}/firmware
-          mv bin/targets/mediatek/filogic/*routerich_ax3000-v1* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/*xiaomi_mi-router-ax3000t* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/profiles* ${images_dir}/firmware
           mv bin/targets/mediatek/filogic/sha256* ${images_dir}/firmware
